@@ -1,0 +1,8 @@
+# config-file for pushover
+#
+# chmod to 600 for security-reasons!
+#
+
+APIKey=<your API-key>
+UserKey=<your user-key>
+

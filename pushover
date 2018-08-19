@@ -1,0 +1,100 @@
+#! /bin/sh
+#
+# pushover - script to send notification to the  service PushOver
+# 
+# https://pushover.net/
+#
+# Variables
+
+Version="0.0.1"
+
+USAGE="usage: `basename $0` [parameters] text"
+
+# Functions
+showUsage ()
+{
+cat <<EOUsageText
+$USAGE
+
+Use option -h for getting help.
+
+EOUsageText
+}
+
+showHelp ()
+{
+cat <<EOHelpText
+`basename $0` [-t <title>] <text>
+
+Script for sending notification with Pushover (https://pushover.net)
+
+$USAGE
+
+-t set title for the notification
+-h print this text and exit.
+
+EOHelpText
+}
+# EndFunctions
+
+#
+# Read the config
+#
+# FixMe: Lazy and unsafe solution using sourcing
+
+. ~/.pushover.conf
+
+
+
+# Parse command line options.
+while getopts hvt: OPT; do
+    case "$OPT" in
+        h)
+            showHelp
+            exit 0
+            ;;
+        v)
+            echo "`basename $0` version $Version"
+            exit 0
+            ;;
+        t)
+            MSGTitle=$OPTARG
+            ;;
+        \?)
+            # getopts issues an error message
+            showUsage >&2
+            exit 1
+            ;;
+    esac
+done
+
+# Remove the options we parsed above.
+shift `expr $OPTIND - 1`
+
+# We want at least one non-option argument.
+# Remove this block if you don't need it.
+if [ $# -eq 0 ]; then
+    echo $USAGE >&2
+    exit 1
+fi
+
+# The additional arguments are the message text
+# Concate variables $@, $*, $1, $2, etc. using this loop:
+for PARAM; do
+    MSG="$MSG $PARAM"
+done
+
+# Genrating string with commend-sequence 
+CurlCall="curl -s  --form-string \"token=$APIKey\"  --form-string \"user=$UserKey\"  --form-string \"message=$MSG\"  "
+
+# Here some more option, when set (e.g. title, priority)
+# embeded in if-constructs
+
+# Add API-endpoint to the paraneter
+CurlCall="$CurlCall https://api.pushover.net/1/messages.json"
+
+
+
+# Call Pushover.net
+eval $CurlCall
+
