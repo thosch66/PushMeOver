@@ -3,6 +3,14 @@
 # chmod to 600 for security-reasons!
 #
 
+# Thess variables must be set
 APIKey=<your API-key>
 UserKey=<your user-key>
 
+# Additional parameters
+#
+# Set an default title for the notifications.
+# Will be used, if option -t is not set.
+# If you want to override the dafault without setting a title use -t ""
+#
+# MSGTitle=<your default notification title>

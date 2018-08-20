@@ -6,7 +6,7 @@
 #
 # Variables
 
-Version="0.0.1"
+Version="0.0.2"
 
 USAGE="usage: `basename $0` [parameters] text"
 
@@ -89,6 +89,14 @@ CurlCall="curl -s  --form-string \"token=$APIKey\"  --form-string \"user=$UserKe
 
 # Here some more option, when set (e.g. title, priority)
 # embeded in if-constructs
+# Is title set, add  -t 
+if [ ! -z "$MSGTitle"  ]; then
+        CurlCall="$CurlCall --form-string \"title=$MSGTitle\" "
+fi
+
+
+
+
 
 # Add API-endpoint to the paraneter
 CurlCall="$CurlCall https://api.pushover.net/1/messages.json"
