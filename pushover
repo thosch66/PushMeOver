@@ -6,7 +6,7 @@
 #
 # Variables
 
-Version="0.0.2"
+Version="0.0.3"
 
 USAGE="usage: `basename $0` [parameters] text"
 
@@ -31,6 +31,7 @@ Script for sending notification with Pushover (https://pushover.net)
 $USAGE
 
 -t set title for the notification
+-p set priority
 -h print this text and exit.
 
 EOHelpText
@@ -47,7 +48,7 @@ EOHelpText
 
 
 # Parse command line options.
-while getopts hvt: OPT; do
+while getopts hvt:p: OPT; do
     case "$OPT" in
         h)
             showHelp
@@ -59,6 +60,31 @@ while getopts hvt: OPT; do
             ;;
         t)
             MSGTitle=$OPTARG
+            ;;
+        p)
+            PrioOption=$OPTARG
+            case "$PrioOption" in           #FixMe Move case to function ParsePriority
+                lowest|stealth|-2)
+                    MSGPriority="-2"
+                    ;;
+                low|silent|-1)
+                    MSGPriority="-1"
+                    ;;
+                normal|0)
+                    MSGPriority="0"
+                    ;;
+                high|1|+1)
+                    MSGPriority="1"
+                    ;;
+                emergency|2|+2)
+                    MSGPriority="2"
+                    ;;
+                *)
+                    # invalid priority -> error
+                    echo "Error: Invalid value \"$PrioOption\" for priority."   #FixMe Jump to help
+                    exit 1
+                    ;;
+            esac
             ;;
         \?)
             # getopts issues an error message
@@ -79,24 +105,28 @@ if [ $# -eq 0 ]; then
 fi
 
 # The additional arguments are the message text
-# Concate variables $@, $*, $1, $2, etc. using this loop:
-for PARAM; do
-    MSG="$MSG $PARAM"
-done
+MSG=$*
 
 # Genrating string with commend-sequence 
 CurlCall="curl -s  --form-string \"token=$APIKey\"  --form-string \"user=$UserKey\"  --form-string \"message=$MSG\"  "
 
 # Here some more option, when set (e.g. title, priority)
-# embeded in if-constructs
-# Is title set, add  -t 
+# embeded in conditional-constructs
+#
+# Is title set, add  -t
 if [ ! -z "$MSGTitle"  ]; then
-        CurlCall="$CurlCall --form-string \"title=$MSGTitle\" "
+    CurlCall="$CurlCall --form-string \"title=$MSGTitle\" "
 fi
 
-
-
-
+# Is priority set
+case $MSGPriority in 
+    -2|-1|1)
+        CurlCall="$CurlCall --form-string \"priority=$MSGPriority\" "
+        ;;
+    2)
+        CurlCall="$CurlCall --form-string \"priority=$MSGPriority\" --form-string \"retry=$EmergencyRetry\" --form-string \"expire=$EmergencyExpire\" "
+        ;;
+esac
 
 # Add API-endpoint to the paraneter
 CurlCall="$CurlCall https://api.pushover.net/1/messages.json"
@@ -104,5 +134,5 @@ CurlCall="$CurlCall https://api.pushover.net/1/messages.json"
 
 
 # Call Pushover.net
-eval $CurlCall
+eval $CurlCall   # FixMe Catch Response  and analyse
 
