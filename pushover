@@ -6,7 +6,7 @@
 #
 # Variables
 
-Version="0.0.4"
+Version="0.0.5"
 
 USAGE="usage: `basename $0` [parameters] text"
 
@@ -108,7 +108,7 @@ fi
 MSG=$*
 
 # Genrating string with commend-sequence
-CurlCall="curl -s   -d 'token=$APIKey'  -d 'user=$UserKey' -d 'message=$MSG'  "
+CurlCall="curl -s   -d 'token=$APIKey'  -d 'user=$UserKey'  -d 'message="$MSG"'  "
 
 # Here some more option, when set (e.g. title, priority)
 # embeded in conditional-constructs
@@ -134,5 +134,49 @@ CurlCall="$CurlCall https://api.pushover.net/1/messages.json"
 
 
 # Call Pushover.net
-CurlResult=$(eval $CurlCall)
-echo $CurlResult
+PushoverResponse=$(eval $CurlCall)
+CurlReturnCode=$?
+
+# Checking, if an error accured
+#
+# Phase 1: curl coneecting Pushover
+#
+# curl has thrown an error (exit code !=0 )
+# codes: https://ec.haxx.se/usingcurl-returns.html
+#
+if [ !  $CurlReturnCode = "0"  ]; then
+    echo "Error while connecting to Pushover.net (curl exit code $CurlReturnCode)."
+    exit 2
+fi
+
+# Phase 2: Examine resppnse from Pushover.net
+#
+# If the first attribute is 'status', then call was successful
+#
+# Exception:
+# If the priority is 'emergency' and the the call is successful,
+# then the first attribute is 'receipt'
+# We can use this information to get the  parameter for a call back function
+#
+# Parse the response
+#
+# cut the response at the first end second quotation mark to get th first
+First=$(echo $PushoverResponse | cut -d'"' -f2)
+case $First in
+    status)
+        # Success
+        ;;
+    receipt)
+        # Also success, cause a receipt is only sended for an successful call
+        # Parse and store the receipt ID for later use
+        PushoverReceiptID=$(echo $PushoverResponse | cut -d'"' -f4)
+        ;;
+    *)
+        # Everything else is an error (or I don't know it now...)
+        # Error message is surounded by '[...]'
+        # (if there is no error message, complete response will be echoed.)
+        PushoverError=$(echo $PushoverResponse | cut -d[ -f2 | cut -d] -f1)
+        echo "Error Message from Pushover.net: $PushoverError"
+        exit 3
+        ;;
+esac
