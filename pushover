@@ -6,7 +6,7 @@
 #
 # Variables
 
-Version="0.0.3"
+Version="0.0.4"
 
 USAGE="usage: `basename $0` [parameters] text"
 
@@ -107,24 +107,24 @@ fi
 # The additional arguments are the message text
 MSG=$*
 
-# Genrating string with commend-sequence 
-CurlCall="curl -s  --form-string \"token=$APIKey\"  --form-string \"user=$UserKey\"  --form-string \"message=$MSG\"  "
+# Genrating string with commend-sequence
+CurlCall="curl -s   -d 'token=$APIKey'  -d 'user=$UserKey' -d 'message=$MSG'  "
 
 # Here some more option, when set (e.g. title, priority)
 # embeded in conditional-constructs
 #
 # Is title set, add  -t
 if [ ! -z "$MSGTitle"  ]; then
-    CurlCall="$CurlCall --form-string \"title=$MSGTitle\" "
+    CurlCall="$CurlCall -d 'title=$MSGTitle' "
 fi
 
 # Is priority set
-case $MSGPriority in 
+case $MSGPriority in
     -2|-1|1)
-        CurlCall="$CurlCall --form-string \"priority=$MSGPriority\" "
+        CurlCall="$CurlCall -d 'priority=$MSGPriority' "
         ;;
     2)
-        CurlCall="$CurlCall --form-string \"priority=$MSGPriority\" --form-string \"retry=$EmergencyRetry\" --form-string \"expire=$EmergencyExpire\" "
+        CurlCall="$CurlCall -d 'priority=$MSGPriority' -d 'retry=$EmergencyRetry' -d 'expire=$EmergencyExpire' "
         ;;
 esac
 
@@ -134,5 +134,5 @@ CurlCall="$CurlCall https://api.pushover.net/1/messages.json"
 
 
 # Call Pushover.net
-eval $CurlCall   # FixMe Catch Response  and analyse
-
+CurlResult=$(eval $CurlCall)
+echo $CurlResult
