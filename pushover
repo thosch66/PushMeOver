@@ -6,7 +6,7 @@
 #
 # Variables
 
-Version="0.0.5"
+Version="0.0.6"
 
 USAGE="usage: `basename $0` [parameters] text"
 
@@ -36,6 +36,37 @@ $USAGE
 
 EOHelpText
 }
+
+urlencode () {                                                                                                                                               
+#
+# This implematation of urlencoding is taken from
+# https://stackoverflow.com/a/3077738/747635
+#
+ [ $# -lt 1 ] &&  { return; }
+
+ encodedurl="$*";
+
+# make sure hexdump exists, if not, just return
+ [ ! -x "/usr/bin/hexdump" ] && { return; }
+
+echo $(echo $encodedurl | hexdump -v -e '1/1 "%02x\t"' -e '1/1 "%_c\n"' |
+    LANG=C awk '
+        $1 == "20"                    { printf("%s",   "%20"); next } # space   becomes %20       # changed from original
+        $1 ~  /0[adAD]$/              {                        next } # strip newlines 
+        $2 ~  /^[a-zA-Z0-9.*()\/-]$/  { printf("%s",   $2);  next }   # pass through what we can
+                                   { printf("%%%s", $1)        }   # take hex value of everything else
+   ')
+}
+
+##########
+#
+# Cause 'urlencode' return no value, if 'hexdump' is not available
+# here is a check for 'hexdump':
+if  [ ! -x "/usr/bin/hexdump" ]; then
+    echo "Error:  The tool 'hexdump' is not available."
+    exit 99
+fi
+
 # EndFunctions
 
 #
@@ -105,36 +136,34 @@ if [ $# -eq 0 ]; then
 fi
 
 # The additional arguments are the message text
-MSG=$*
+MSG=$(urlencode $*)
 
 # Genrating string with commend-sequence
-CurlCall="curl -s   -d 'token=$APIKey'  -d 'user=$UserKey'  -d 'message="$MSG"'  "
+CurlCall="curl -s   -d token=$APIKey&user=$UserKey&message="$MSG""
 
 # Here some more option, when set (e.g. title, priority)
 # embeded in conditional-constructs
 #
 # Is title set, add  -t
 if [ ! -z "$MSGTitle"  ]; then
-    CurlCall="$CurlCall -d 'title=$MSGTitle' "
+    CurlCall="$CurlCall&title=$(urlencode $MSGTitle)"
 fi
 
 # Is priority set
 case $MSGPriority in
     -2|-1|1)
-        CurlCall="$CurlCall -d 'priority=$MSGPriority' "
+        CurlCall="$CurlCall&priority=$MSGPriority"
         ;;
     2)
-        CurlCall="$CurlCall -d 'priority=$MSGPriority' -d 'retry=$EmergencyRetry' -d 'expire=$EmergencyExpire' "
+        CurlCall="$CurlCall&priority=$MSGPriority&retry=$EmergencyRetry&expire=$EmergencyExpire"
         ;;
 esac
 
 # Add API-endpoint to the paraneter
 CurlCall="$CurlCall https://api.pushover.net/1/messages.json"
 
-
-
 # Call Pushover.net
-PushoverResponse=$(eval $CurlCall)
+PushoverResponse=$($CurlCall)
 CurlReturnCode=$?
 
 # Checking, if an error accured
