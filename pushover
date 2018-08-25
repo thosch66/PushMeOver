@@ -6,7 +6,7 @@
 #
 # Variables
 
-Version="0.0.6"
+Version="0.0.7"
 
 USAGE="usage: `basename $0` [parameters] text"
 
@@ -17,27 +17,29 @@ cat <<EOUsageText
 $USAGE
 
 Use option -h for getting help.
-
 EOUsageText
 }
 
 showHelp ()
 {
 cat <<EOHelpText
-`basename $0` [-t <title>] <text>
+`basename $0` [-t <title>] [-p <priority>] <text>
+`basename $0` -h
+`basename $0` -v
 
 Script for sending notification with Pushover (https://pushover.net)
 
-$USAGE
+Version $Version
 
 -t set title for the notification
 -p set priority
--h print this text and exit.
+-h print this text and exit
+-v print version and exit
 
 EOHelpText
 }
 
-urlencode () {                                                                                                                                               
+urlencode () {
 #
 # This implematation of urlencoding is taken from
 # https://stackoverflow.com/a/3077738/747635
@@ -131,7 +133,7 @@ shift `expr $OPTIND - 1`
 # We want at least one non-option argument.
 # Remove this block if you don't need it.
 if [ $# -eq 0 ]; then
-    echo $USAGE >&2
+    showUsage >&2
     exit 1
 fi
 
