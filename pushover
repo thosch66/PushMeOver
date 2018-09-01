@@ -81,7 +81,7 @@ fi
 
 
 # Parse command line options.
-while getopts hvt:p: OPT; do
+while getopts hvt:p:s: OPT; do
     case "$OPT" in
         h)
             showHelp
@@ -115,6 +115,25 @@ while getopts hvt:p: OPT; do
                 *)
                     # invalid priority -> error
                     echo "Error: Invalid value \"$PrioOption\" for priority."   #FixMe Jump to help
+                    exit 1
+                    ;;
+            esac
+            ;;
+        s)
+            MSGSound=$OPTARG
+            case "$MSGSound" in
+                pushover|bike|bugle|cashregister|classical|cosmic|falling)
+                    # Value o.k., perhaps my programming skills not...
+                    ;;
+                gamelan|incoming|intermission|magic|mechanical|pianobar)
+                    # Value also .o.k. ...
+                    ;;
+                siren|spacealarm|tugboat|alien|climb|persistent|echo|updown|none)
+                    # Value also o.k. ...
+                    ;;
+                *)
+                    # invalid sound defined -> error
+                    echo "Error: Invalid value \"$MSGSound\" for sound."
                     exit 1
                     ;;
             esac
@@ -160,6 +179,10 @@ case $MSGPriority in
         CurlCall="$CurlCall&priority=$MSGPriority&retry=$EmergencyRetry&expire=$EmergencyExpire"
         ;;
 esac
+
+if [ ! -z "$MSGSound"  ]; then
+        CurlCall="$CurlCall&sound=$MSGSound"
+fi
 
 # Add API-endpoint to the paraneter
 CurlCall="$CurlCall https://api.pushover.net/1/messages.json"
