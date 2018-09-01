@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # pushover - script to send notification to the  service PushOver
-# 
+#
 # https://pushover.net/
 #
 # Variables
@@ -33,6 +33,7 @@ Version $Version
 
 -t set title for the notification
 -p set priority
+-s set sound
 -h print this text and exit
 -v print version and exit
 
@@ -180,6 +181,7 @@ case $MSGPriority in
         ;;
 esac
 
+# Is sound set
 if [ ! -z "$MSGSound"  ]; then
         CurlCall="$CurlCall&sound=$MSGSound"
 fi
