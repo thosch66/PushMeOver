@@ -72,7 +72,7 @@ echo $(echo $encodedurl | hexdump -v -e '1/1 "%02x\t"' -e '1/1 "%_c\n"' |
 # here is a check for 'hexdump':
 if  [ ! -x "/usr/bin/hexdump" ]; then
     echo "Error:  The tool 'hexdump' is not available."
-    exit 99
+    exit 1
 fi
 
 # EndFunctions
@@ -121,7 +121,7 @@ while getopts hvt:p:s: OPT; do
                 *)
                     # invalid priority -> error
                     echo "Error: Invalid value \"$PrioOption\" for priority."   #FixMe Jump to help
-                    exit 1
+                    exit 10
                     ;;
             esac
             ;;
@@ -140,14 +140,14 @@ while getopts hvt:p:s: OPT; do
                 *)
                     # invalid sound defined -> error
                     echo "Error: Invalid value \"$MSGSound\" for sound."
-                    exit 1
+                    exit 10
                     ;;
             esac
             ;;
         \?)
             # getopts issues an error message
             showUsage >&2
-            exit 1
+            exit 10
             ;;
     esac
 done
@@ -155,11 +155,11 @@ done
 # Remove the options we parsed above.
 shift `expr $OPTIND - 1`
 
-# We want at least one non-option argument.
-# Remove this block if you don't need it.
+# We need at least one non-option argument.
+# If not then there is no message text
 if [ $# -eq 0 ]; then
     showUsage >&2
-    exit 1
+    exit 11
 fi
 
 # The additional arguments are the message text
@@ -207,7 +207,7 @@ CurlReturnCode=$?
 #
 if [ !  $CurlReturnCode = "0"  ]; then
     echo "Error while connecting to Pushover.net (curl exit code $CurlReturnCode)."
-    exit 2
+    exit 20
 fi
 
 # Phase 2: Examine resppnse from Pushover.net
@@ -238,6 +238,6 @@ case $First in
         # (if there is no error message, complete response will be echoed.)
         PushoverError=$(echo $PushoverResponse | cut -d[ -f2 | cut -d] -f1)
         echo "Error Message from Pushover.net: $PushoverError"
-        exit 3
+        exit 21
         ;;
 esac
