@@ -19,7 +19,7 @@ An alternative default title can also be set in the configuration file. This def
 In all cases the title can be set to blank by `-t ""`
 * **priority** option `-p <priority>`  
 The priority of the notification can be set with this option.  
-Valid priorities are 'lowest', 'low', 'normal', 'high', and 'emergency'. See the Pushover API documentation for more information on the priorities.
+Valid priorities are 'lowest', 'low', 'normal', 'high', and 'emergency' (read the [Pushover API documentation](https://pushover.net/api "Pushover: API") for more information).
 * **sound** option `-s <sound>`  
 The sound which will be played on the target device can be set with this option.  
 Valid sounds are  'pushover' , 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming', 'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb', 'persistent', 'echo', 'updown', and 'none'.
