@@ -23,19 +23,24 @@ EOUsageText
 showHelp ()
 {
 cat <<EOHelpText
-`basename $0` [-t <title>] [-p <priority>] <text>
-`basename $0` -h
-`basename $0` -v
+usage: `basename $0` [-t <title>] [-p <priority>] [-s <sound>] <text>
+       `basename $0` -h
+       `basename $0` -v
 
 Script for sending notification with Pushover (https://pushover.net)
 
 Version $Version
 
--t set title for the notification
--p set priority
--s set sound
--h print this text and exit
--v print version and exit
+-t  set title for the notification
+-p  set priority for the notification
+    Valid priorities are 'lowest', 'low', 'normal', 'high', and 'emergency'.
+-s  set sound for the notification
+    Valid sounds are  'pushover' , 'bike', 'bugle', 'cashregister',
+    'classical', 'cosmic', 'falling', 'gamelan', 'incoming', 'intermission',
+    'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat',
+    'alien', 'climb', 'persistent', 'echo', 'updown', and 'none'.
+-h  print this text and exit
+-v  print version and exit
 
 EOHelpText
 }
@@ -55,7 +60,7 @@ urlencode () {
 echo $(echo $encodedurl | hexdump -v -e '1/1 "%02x\t"' -e '1/1 "%_c\n"' |
     LANG=C awk '
         $1 == "20"                    { printf("%s",   "%20"); next } # space   becomes %20       # changed from original
-        $1 ~  /0[adAD]$/              {                        next } # strip newlines 
+        $1 ~  /0[adAD]$/              {                        next } # strip newlines
         $2 ~  /^[a-zA-Z0-9.*()\/-]$/  { printf("%s",   $2);  next }   # pass through what we can
                                    { printf("%%%s", $1)        }   # take hex value of everything else
    ')
