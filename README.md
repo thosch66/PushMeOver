@@ -23,3 +23,19 @@ Valid priorities are 'lowest', 'low', 'normal', 'high', and 'emergency' (read th
 * **sound** option `-s <sound>`  
 The sound which will be played on the target device can be set with this option.  
 Valid sounds are  'pushover' , 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming', 'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb', 'persistent', 'echo', 'updown', and 'none'.
+
+## Error codes
+
+*pushover* will return one of theese error codes:
+
+| Error code | Error |
+| ---:|:--- |
+| 0 | No error |
+| 1 | `hexdump` not available. |
+| 2 | config file does not exist or is not readable (not yet implented) |
+| 3 | mode of config file is not 0600 (not yet implented) |
+| 4 | missing values in config file (not yet implented) |
+| 10 | invalid option or value |
+| 11 | missing message text |
+| 20 | error while connecting to *Pushover.net* |
+| 21 | error status from *Pushover.net* |
