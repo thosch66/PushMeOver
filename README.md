@@ -24,11 +24,11 @@ Valid priorities are 'lowest', 'low', 'normal', 'high', and 'emergency' (read th
 The sound which will be played on the target device can be set with this option.  
 Valid sounds are  'pushover' , 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming', 'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb', 'persistent', 'echo', 'updown', and 'none'.
 
-## Error codes
+## Exit codes
 
-*pushover* will return one of theese error codes:
+*pushover* will return one of theese exit codes:
 
-| Error code | Error |
+| Exit code | Status |
 | ---:|:--- |
 | 0 | No error |
 | 1 | `hexdump` not available. |
