@@ -76,7 +76,7 @@ fi
 #
 # FixMe: Lazy and unsafe solution using sourcing
 
-. ~/.pushover.conf
+. ~/.$(basename $0).conf
 
 
 
