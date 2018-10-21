@@ -10,6 +10,8 @@ Version="0.0.8"
 
 USAGE="usage: `basename $0` [parameters] text"
 
+ConfigFile="$HOME/.`basename $0`.conf"
+
 # Functions
 showUsage ()
 {
@@ -82,9 +84,12 @@ fi
 #
 # FixMe: Lazy and unsafe solution using sourcing
 
-. ~/.pushover.conf
-
-
+if [ -e $ConfigFile ]; then
+    . $ConfigFile
+else
+    echo "Error: The config file '$ConfigFile' does not exist."
+    exit 2
+fi
 
 # Parse command line options.
 while getopts hvt:p:s: OPT; do
