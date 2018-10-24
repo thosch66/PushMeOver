@@ -84,10 +84,10 @@ fi
 #
 # FixMe: Lazy and unsafe solution using sourcing
 
-if [ -e $ConfigFile ]; then
+if [ -r $ConfigFile ]; then
     . $ConfigFile
 else
-    echo "Error: The config file '$ConfigFile' does not exist."
+    echo "Error: The config file '$ConfigFile' does not exist or is not readable."
     exit 2
 fi
 
