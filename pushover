@@ -6,7 +6,7 @@
 #
 # Variables
 
-Version="0.0.8"
+Version="0.0.9"
 
 USAGE="usage: `basename $0` [parameters] text"
 
