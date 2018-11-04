@@ -22,6 +22,20 @@ Use option -h for getting help.
 EOUsageText
 }
 
+readConfig ()
+{
+#
+# Read the config
+#
+# FixMe: Lazy and unsafe solution using sourcing
+if [ -r $ConfigFile ]; then
+    . $ConfigFile
+else
+    echo "Error: The config file '$ConfigFile' does not exist or is not readable."
+    exit 2
+fi
+}
+
 showHelp ()
 {
 cat <<EOHelpText
@@ -82,14 +96,7 @@ fi
 #
 # Read the config
 #
-# FixMe: Lazy and unsafe solution using sourcing
-
-if [ -r $ConfigFile ]; then
-    . $ConfigFile
-else
-    echo "Error: The config file '$ConfigFile' does not exist or is not readable."
-    exit 2
-fi
+readConfig
 
 # Parse command line options.
 while getopts hvt:p:s: OPT; do
