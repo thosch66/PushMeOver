@@ -28,10 +28,10 @@ readConfig ()
 # Read the config
 #
 # FixMe: Lazy and unsafe solution using sourcing
-if [ -r $ConfigFile ]; then
-    . $ConfigFile
+if [ -r $1 ]; then
+    . $1
 else
-    echo "Error: The config file '$ConfigFile' does not exist or is not readable."
+    echo "Error: The config file '$1' does not exist or is not readable."
     exit 2
 fi
 }
@@ -96,7 +96,7 @@ fi
 #
 # Read the config
 #
-readConfig
+readConfig $ConfigFile
 
 # Parse command line options.
 while getopts hvt:p:s: OPT; do
