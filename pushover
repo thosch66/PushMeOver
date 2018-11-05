@@ -27,11 +27,36 @@ readConfig ()
 #
 # Read the config
 #
+# Check if config is readable (and existing)
 if [ ! -r $1 ]; then
-    echo "Error: The config file '$1' does not exist or is not readable."
+    echo "Error: The config file '$1'"
+    echo "does not exist or is not readable."
     exit 2
 fi
-
+# Check access rights
+# Get access right in human readable form
+ConfigFileMod=$(stat -c %A $1)
+# Check if file writable for others
+# Is mod g=w or o=w? -> error
+if  [ "$(echo $ConfigFileMod | cut -c 6 | xargs printf "%s")" = "w" -o \
+      "$(echo $ConfigFileMod | cut -c 9 | xargs printf "%s")" = "w" ]; then
+    echo "Error: The config file '$1'"
+    echo "       is writable by other users."
+    echo "       The program was halted for security reasons."
+    echo "       Check the file for malicious content and change the access rights:"
+    echo "       chmod 600 $1"
+    exit 3
+fi
+# Warn if file is readable for others
+# Is mod g=r or o=r
+if  [ "$(echo $ConfigFileMod | cut -c 5 | xargs printf "%s")" = "r" -o \
+      "$(echo $ConfigFileMod | cut -c 8 | xargs printf "%s")" = "r" ]; then
+    echo "Warning: The config file '$1'"
+    echo "         is readable by other users."
+    echo "         You should protect your API key."
+    echo "         Change the access rights:"
+    echo "         chmod 600 $1"
+fi
 # FixMe: Lazy and unsafe solution using sourcing
 . $1
 }
