@@ -33,7 +33,7 @@ Valid sounds are  'pushover' , 'bike', 'bugle', 'cashregister', 'classical', 'co
 | 0 | No error |
 | 1 | `hexdump` not available. |
 | 2 | config file does not exist or is not readable |
-| 3 | mode of config file is not 0600 (not yet implented) |
+| 3 | mode of config file is not 0600 |
 | 4 | missing values in config file (not yet implented) |
 | 10 | invalid option or value |
 | 11 | missing message text |
