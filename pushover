@@ -44,8 +44,7 @@ if [ "$(uname | xargs printf "%s")" = "Linux" ]; then
 else
     ConfigFileMod=$(stat -f %Sp $1)
 fi
-##DEBUG
-echo $ConfigFileMod
+
 # Check if file writable for others
 # Is mod g=w or o=w? -> error
 if  [ "$(echo $ConfigFileMod | cut -c 6 | xargs printf "%s")" = "w" -o \
