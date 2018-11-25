@@ -12,6 +12,10 @@ USAGE="usage: `basename $0` [parameters] text"
 
 ConfigFile="$HOME/.`basename $0`.conf"
 
+# Defaults for additional parameters on priority 'emergency'
+EmergencyRetry=60
+EmergencyExpire=3600
+
 # Functions
 showUsage ()
 {
