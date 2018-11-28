@@ -12,6 +12,10 @@ USAGE="usage: `basename $0` [parameters] text"
 
 ConfigFile="$HOME/.`basename $0`.conf"
 
+# Defaults for additional parameters on priority 'emergency'
+EmergencyRetry=60
+EmergencyExpire=3600
+
 # Functions
 showUsage ()
 {
@@ -30,7 +34,7 @@ readConfig ()
 # Check if config is readable (and existing)
 if [ ! -r $1 ]; then
     echo "Error: The config file '$1'"
-    echo "does not exist or is not readable."
+    echo "       does not exist or is not readable."
     exit 2
 fi
 # Check access rights
@@ -42,6 +46,7 @@ if [ "$(uname | xargs printf "%s")" = "Linux" ]; then
     # We are on Linux
     ConfigFileMod=$(stat -c %A $1)
 else
+    # Not Linux. probably Mac OS/Darwin/BSD
     ConfigFileMod=$(stat -f %Sp $1)
 fi
 
@@ -127,11 +132,6 @@ fi
 
 # EndFunctions
 
-#
-# Read the config
-#
-readConfig $ConfigFile
-
 # Parse command line options.
 while getopts hvt:p:s: OPT; do
     case "$OPT" in
@@ -144,7 +144,8 @@ while getopts hvt:p:s: OPT; do
             exit 0
             ;;
         t)
-            MSGTitle=$OPTARG
+            # Store MSGTitle from arguments
+            ArgMSGTitle=$OPTARG
             ;;
         p)
             PrioOption=$OPTARG
@@ -211,7 +212,37 @@ fi
 # The additional arguments are the message text
 MSG=$(urlencode $*)
 
-# Genrating string with commend-sequence
+#
+# Read the config
+#
+readConfig $ConfigFile
+
+
+# Overwriting setting from configfile with settings from arguments
+# At this time only the MSGTitle:
+# Only use ArgMSGTitle if it#s not empty
+if [ ! -z "$ArgMSGTitle"  ]; then
+    MSGTitle=$ArgMSGTitle
+fi
+
+
+# Check if all nessary values are set.
+# (Values set within the script do not have to be checked.)
+#
+# Check APIKey
+if [ -z "$APIKey"  ]; then
+    echo "Error: API-Key is not provided."
+    exit 4
+fi
+
+# Check User/Group-ID
+if [ -z "$UserKey"  ]; then
+    echo "Error: User/Group-ID is not provided."
+    exit 4
+fi
+
+
+# Genrating string with command-sequence
 CurlCall="curl -s   -d token=$APIKey&user=$UserKey&message="$MSG""
 
 # Here some more option, when set (e.g. title, priority)
