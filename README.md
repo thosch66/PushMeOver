@@ -8,7 +8,7 @@ The user key in configuration file is used to adress the user, which will receiv
 
 Using the `-u <user-key>`-Option of the script it is possible to set the user or the group which will receive the notification.
 
-The syntax of *pushover* is `pushover [options] 'Text of notification'`. If the script is called whitout option it will display a short help text.
+The syntax of *pushover* is `pushover [options] 'Text of notification'`. `pushover -h` will display a short help text.
 
 ## Supported features
 
