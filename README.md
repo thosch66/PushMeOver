@@ -6,13 +6,13 @@ For using the service *Pushover* it is necessary to signup for the service, purc
 
 The user key in configuration file is used to adress the user, which will receive the notification. *Pushover* also supports sending notifications to groups of users. Groups can be created in the user setting at [*Pushover.net*](https://pushover.net "Pushover: home") (after logged in).
 
-Using the `-u <user-key>`-Option of the script it is possible to set the user or the group which will receive the notification.
+Using the `-u <user-key>`-option of the script it is possible to set the user or the group which will receive the notification.
 
 The syntax of *pushover* is `pushover [options] 'Text of notification'`. `pushover -h` will display a short help text.
 
 ## Supported features
 
-The script *pushover* is capable to use the most of the features of *Pushover*. It supports the following features of the service *Pushover*:
+The script *pushover* is capable to use most of the features of *Pushover*. It supports the following features:
 
 * **title** option `-t <title>`
 For the title of the notification *Pushover* uses by default the name of the application which is linked to the API token.
