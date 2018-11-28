@@ -34,7 +34,7 @@ readConfig ()
 # Check if config is readable (and existing)
 if [ ! -r $1 ]; then
     echo "Error: The config file '$1'"
-    echo "does not exist or is not readable."
+    echo "       does not exist or is not readable."
     exit 2
 fi
 # Check access rights
@@ -224,6 +224,23 @@ readConfig $ConfigFile
 if [ ! -z "$ArgMSGTitle"  ]; then
     MSGTitle=$ArgMSGTitle
 fi
+
+
+# Check if all nessary values are set.
+# (Values set within the script do not have to be checked.)
+#
+# Check APIKey
+if [ -z "$APIKey"  ]; then
+    echo "Error: API-Key is not provided."
+    exit 4
+fi
+
+# Check User/Group-ID
+if [ -z "$UserKey"  ]; then
+    echo "Error: User/Group-ID is not provided."
+    exit 4
+fi
+
 
 # Genrating string with command-sequence
 CurlCall="curl -s   -d token=$APIKey&user=$UserKey&message="$MSG""
