@@ -2,15 +2,17 @@
 
 The shell script *pushover* provides an cli for the service [*Pushover*](https://pushover.net/ "Pushover: Simple Notifications for Android, iOS, and Desktop"). This service can be used to send push notifications to mobile devices running *Android* or *iOS* using the *Pushover App* and Notebooks and Desktops using browser plugins. *Pushover* provides a [REST API](https://pushover.net/api "Pushover: API"), which is used by the script to send the notifications.
 
-For using the service *Pushover* it is necessary to signup for the service, purchase a license for a [one-time or recurring fee](https://pushover.net/faq#overview-fees "Pushover: Frequently Asked Questions") and create an Application/API Token. The user key and the API token have to be added to the configuration file of *pushover* (`~/.pushover.conf` ).
+For using the service *Pushover* it is necessary to signup for the service, purchase a license for a [one-time or recurring fee](https://pushover.net/faq#overview-fees "Pushover: Frequently Asked Questions") **and create** an Application/API Token. The user key and the API token have to be added to the configuration file of *pushover* (`~/.pushover.conf`).
 
-The script *pushover* is capable to use the most of the features of *Pushover*.
+The user key in configuration file is used to adress the user, which will receive the notification. *Pushover* also supports sending notifications to groups of users. Groups can be created in the user setting at [*Pushover.net*](https://pushover.net "Pushover: home") (after logged in).
 
-The syntax of *pushvoer* is `pushover [options] 'Text of notification'`
+Using the `-u <user-key>`-Option of the script it is possible to set the user or the group which will receive the notification.
+
+The syntax of *pushover* is `pushover [options] 'Text of notification'`. If the script is called whitout option it will display a short help text.
 
 ## Supported features
 
-*pushover* supports the following features of the service *Pushover*:
+The script *pushover* is capable to use the most of the features of *Pushover*. It supports the following features of the service *Pushover*:
 
 * **title** option `-t <title>`
 For the title of the notification *Pushover* uses by default the name of the application which is linked to the API token.

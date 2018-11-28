@@ -78,7 +78,8 @@ fi
 showHelp ()
 {
 cat <<EOHelpText
-usage: `basename $0` [-t <title>] [-p <priority>] [-s <sound>] <text>
+usage: `basename $0` [-t <title>] [-p <priority>] [-s <sound>] [-u <userid>]
+                     <text>
        `basename $0` -h
        `basename $0` -v
 
@@ -94,6 +95,7 @@ Version $Version
     'classical', 'cosmic', 'falling', 'gamelan', 'incoming', 'intermission',
     'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat',
     'alien', 'climb', 'persistent', 'echo', 'updown', and 'none'.
+-u  set key of the user or group which will receive the notification.
 -h  print this text and exit
 -v  print version and exit
 
@@ -133,7 +135,7 @@ fi
 # EndFunctions
 
 # Parse command line options.
-while getopts hvt:p:s: OPT; do
+while getopts hvt:u:p:s: OPT; do
     case "$OPT" in
         h)
             showHelp
@@ -146,6 +148,10 @@ while getopts hvt:p:s: OPT; do
         t)
             # Store MSGTitle from arguments
             ArgMSGTitle=$OPTARG
+            ;;
+        u)
+            # Store UserKey from arguments
+            ArgUserKey=$OPTARG
             ;;
         p)
             PrioOption=$OPTARG
@@ -219,12 +225,14 @@ readConfig $ConfigFile
 
 
 # Overwriting setting from configfile with settings from arguments
-# At this time only the MSGTitle:
-# Only use ArgMSGTitle if it#s not empty
+# Only use ArgMSGTitle if it's not empty
 if [ ! -z "$ArgMSGTitle"  ]; then
     MSGTitle=$ArgMSGTitle
 fi
-
+# Only use ArgUserKey if it's not empty
+if [ ! -z "$ArgUserKey"  ]; then
+    UserKey=$ArgUserKey
+fi
 
 # Check if all nessary values are set.
 # (Values set within the script do not have to be checked.)
