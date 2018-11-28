@@ -46,6 +46,7 @@ if [ "$(uname | xargs printf "%s")" = "Linux" ]; then
     # We are on Linux
     ConfigFileMod=$(stat -c %A $1)
 else
+    # Not Linux. probably Mac OS/Darwin/BSD
     ConfigFileMod=$(stat -f %Sp $1)
 fi
 
@@ -131,11 +132,6 @@ fi
 
 # EndFunctions
 
-#
-# Read the config
-#
-readConfig $ConfigFile
-
 # Parse command line options.
 while getopts hvt:p:s: OPT; do
     case "$OPT" in
@@ -148,7 +144,8 @@ while getopts hvt:p:s: OPT; do
             exit 0
             ;;
         t)
-            MSGTitle=$OPTARG
+            # Store MSGTitle from arguments
+            ArgMSGTitle=$OPTARG
             ;;
         p)
             PrioOption=$OPTARG
@@ -215,7 +212,20 @@ fi
 # The additional arguments are the message text
 MSG=$(urlencode $*)
 
-# Genrating string with commend-sequence
+#
+# Read the config
+#
+readConfig $ConfigFile
+
+
+# Overwriting setting from configfile with settings from arguments
+# At this time only the MSGTitle:
+# Only use ArgMSGTitle if it#s not empty
+if [ ! -z "$ArgMSGTitle"  ]; then
+    MSGTitle=$ArgMSGTitle
+fi
+
+# Genrating string with command-sequence
 CurlCall="curl -s   -d token=$APIKey&user=$UserKey&message="$MSG""
 
 # Here some more option, when set (e.g. title, priority)
