@@ -4,11 +4,11 @@ The shell script *pushover* provides an cli for the service [*Pushover*](https:/
 
 For using the service *Pushover* it is necessary to signup for the service, purchase a license for a [one-time or recurring fee](https://pushover.net/faq#overview-fees "Pushover: Frequently Asked Questions") **and create** an Application/API Token. The user key and the API token have to be added to the configuration file of *pushover* (`~/.pushover.conf`).
 
-The user key in configuration file is used to adress the user, which will receive the notification. *Pushover* also supports sending notifications to groups of users. Groups can be created in the user setting at [*Pushover.net*](https://pushover.net "Pushover: home") (after logged in).
+*Pushover* can send notifications to devices of single users or groups of users. Groups can be created in the user settings at [*Pushover.net*](https://pushover.net "Pushover: home") (login needed). It is also possible to use the key of other other users or their groups to adress them or their groups. I is not possible to use more than one user or group key while sending a notification. If more than one user should be notificated, it is nessessary to set up a group and use the group key.
 
-Using the `-u <user-key>`-Option of the script it is possible to set the user or the group which will receive the notification.
+By default the user key (or group key) in the configuration file is used to adress the user (or group), which will receive the notification. By using the `-u <user-key>`-Option of the script it is possible to set a different user or group which will receive the notification.
 
-The syntax of *pushover* is `pushover [options] 'Text of notification'`. `pushover -h` will display a short help text.
+The syntax of *pushover* is `pushover [options] 'Text of the notification'`. `pushover -h` will display a short help text.
 
 ## Supported features
 
