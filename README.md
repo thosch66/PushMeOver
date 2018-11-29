@@ -12,7 +12,7 @@ The syntax of *pushover* is `pushover [options] 'Text of the notification'`. `pu
 
 ## Supported features
 
-The script *pushover* is capable to use the most of the features of *Pushover*. It supports the following features of the service *Pushover*:
+The script *pushover* is capable to use most of the features of *Pushover*. It supports the following features:
 
 * **title** option `-t <title>`
 For the title of the notification *Pushover* uses by default the name of the application which is linked to the API token.
