@@ -79,7 +79,7 @@ showHelp ()
 {
 cat <<EOHelpText
 usage: `basename $0` [-t <title>] [-p <priority>] [-s <sound>] [-u <userid>]
-                     <text>
+                     <msg text>
        `basename $0` -h
        `basename $0` -v
 
@@ -99,6 +99,9 @@ Version $Version
 -h  print this text and exit
 -v  print version and exit
 
+If the message text is "-" (a single hyphen) the text will be read
+from stdin.
+
 EOHelpText
 }
 
@@ -116,8 +119,8 @@ urlencode () {
 
 echo $(echo $encodedurl | hexdump -v -e '1/1 "%02x\t"' -e '1/1 "%_c\n"' |
     LANG=C awk '
-        $1 == "20"                    { printf("%s",   "%20"); next } # space   becomes %20       # changed from original
-        $1 ~  /0[adAD]$/              {                        next } # strip newlines
+        $1 == "20"                    { printf("%s",   "%20"); next } # space    -> %20 # changed from original
+        $1 ~  /0[adAD]$/              { printf("%s",   "%0A"); next } # newlines -> %0A # changed from original
         $2 ~  /^[a-zA-Z0-9.*()\/-]$/  { printf("%s",   $2);  next }   # pass through what we can
                                    { printf("%%%s", $1)        }   # take hex value of everything else
    ')
@@ -215,8 +218,16 @@ if [ $# -eq 0 ]; then
     exit 11
 fi
 
-# The additional arguments are the message text
-MSG=$(urlencode $*)
+# The additional arguments ($*) are the message text or "-" for reading stdin
+# id not "-" use the input
+if [ "$*" !=  "-" ]; then
+    MSG=$(urlencode $*)
+else
+    # else read stdin
+    while read LINE; do
+        MSG=$MSG+$(urlencode ${LINE})
+    done
+fi
 
 #
 # Read the config
