@@ -4,8 +4,8 @@
 #
 
 # Thess variables must be set
-APIKey=<your API-key>
-UserKey=<your user-key>
+APIKey=
+UserKey=
 
 #
 # Additional praramters for the priority 'emergency'   (Must be set.)
