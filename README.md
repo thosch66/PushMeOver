@@ -8,7 +8,9 @@ For using the service *Pushover* it is necessary to signup for the service, purc
 
 By default the user key (or group key) in the configuration file is used to adress the user (or group), which will receive the notification. By using the `-u <user-key>`-Option of the script it is possible to set a different user or group which will receive the notification.
 
-The syntax of *pushover* is `pushover [options] 'Text of the notification'`. `pushover -h` will display a short help text.
+The syntax of *pushover* is `pushover [options] 'Text of the notification'`. If the message text is "-" (a single hyphen) the text will be read from stdin.
+
+`pushover -h` will display a short help text.
 
 ## Supported features
 
